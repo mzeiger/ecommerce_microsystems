@@ -1,0 +1,25 @@
+{
+  "editor.quickSuggestions": {
+    "other": false,
+    "comments": false,
+    "strings": false
+  },
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.tabCompletion": "off",
+  "editor.wordBasedSuggestions": "off",
+  "editor.parameterHints.enabled": false,
+  "editor.inlineSuggest.enabled": false,
+  "editor.snippetSuggestions": "none",
+  "editor.hover.enabled": "off",
+  "editor.suggest.showIcons": false,
+  "editor.suggest.showStatusBar": false,
+  "editor.lightbulb.enabled": "off",
+  "javascript.suggest.enabled": false,
+  "javascript.suggest.autoImports": false,
+  "typescript.suggest.enabled": false,
+  "typescript.suggest.autoImports": false,
+  "[javascript]": {
+    "editor.suggest.enabled": false
+  }
+}

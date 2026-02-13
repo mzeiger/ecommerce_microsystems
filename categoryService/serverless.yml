@@ -1,0 +1,89 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: omnidatasystems
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: categoryService
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-2
+  environment:
+    BUCKET_NAME: category-images-zm8032-dev-190
+    REGION: us-east-2
+    DYNAMODB_TABLE: Categories
+    SNS_TOPIC_ARN: arn:aws:sns:us-east-2:148761680273:CategoryCleanupTopic2
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource: arn:aws:s3:::category-images-zm8032-dev-190/*
+    - Effect: 'Allow'
+      Action:
+        -  dynamodb:PutItem
+        -  dynamodb:UpdateItem
+        -  dynamodb:Scan
+        -  dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:us-east-2:148761680273:table/Categories
+    - Effect: 'Allow'
+      Action:
+        - sns:Publish
+      Resource: arn:aws:sns:us-east-2:148761680273:CategoryCleanupTopic2
+
+resources:
+  Resources:
+    CategoryImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: category-images-zm8032-dev-190
+    CategoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Categories
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: fileName
+            AttributeType: S
+        KeySchema:
+          - AttributeName: fileName
+            KeyType: HASH
+    CategoryCleanupTopic2:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: CategoryCleanupTopic2
+    CategoryCleanupSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: arn:aws:sns:us-east-2:148761680273:CategoryCleanupTopic2
+        Protocol: email
+        Endpoint: mark.zeiger@gmail.com
+
+functions:
+  getUploadUrl:
+    handler: handlers/getUploadUrl.getUploadUrl
+    events:
+      - httpApi:
+          path: /get-upload-url
+          method: post
+  getAllCategories:
+    handler: handlers/getAllCategories.getAllCategories
+    events:
+      - httpApi:
+          path: /get-all-categories
+          method: get
+  updateCategoryImage:
+    handler: handlers/updateCategoryImage.updateCategoryImage
+    events:
+      - s3:
+          bucket: category-images-zm8032-dev-190
+          event: s3:ObjectCreated:Put
+          existing: true  # indicates bucket already exists
+  cleanupCategories:
+    handler: handlers/cleanupCategories.cleanupCategories
+    events:
+      - schedule: rate(2 minutes)
+
+
+
+
+
+         

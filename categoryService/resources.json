@@ -1,0 +1,114 @@
+{
+    "StackResourceSummaries": [
+        {
+            "LogicalResourceId": "CategoryImagesBucket",
+            "PhysicalResourceId": "category-images-zm8032-dev-190",
+            "ResourceType": "AWS::S3::Bucket",
+            "LastUpdatedTimestamp": "2025-12-12T02:25:48.832000+00:00",
+            "ResourceStatus": "UPDATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "CategoryTable",
+            "PhysicalResourceId": "Categories",
+            "ResourceType": "AWS::DynamoDB::Table",
+            "LastUpdatedTimestamp": "2025-03-29T02:00:08.291000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HelloLambdaFunction",
+            "PhysicalResourceId": "categoryService-dev-hello",
+            "ResourceType": "AWS::Lambda::Function",
+            "LastUpdatedTimestamp": "2025-12-12T03:23:07.571000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HelloLambdaPermissionHttpApi",
+            "PhysicalResourceId": "categoryService-dev-HelloLambdaPermissionHttpApi-z2bhbH6q4TBY",
+            "ResourceType": "AWS::Lambda::Permission",
+            "LastUpdatedTimestamp": "2025-12-12T03:23:09.126000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HelloLambdaVersionRDXRPi8QUPQPvbqmO4BEmcRFwZegzJnXjHsIj4c8c",
+            "PhysicalResourceId": "arn:aws:lambda:us-east-2:148761680273:function:categoryService-dev-hello:3",
+            "ResourceType": "AWS::Lambda::Version",
+            "LastUpdatedTimestamp": "2025-12-12T03:23:09.470000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HelloLogGroup",
+            "PhysicalResourceId": "/aws/lambda/categoryService-dev-hello",
+            "ResourceType": "AWS::Logs::LogGroup",
+            "LastUpdatedTimestamp": "2025-12-12T03:22:47.342000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HttpApi",
+            "PhysicalResourceId": "i8sc9hqpqi",
+            "ResourceType": "AWS::ApiGatewayV2::Api",
+            "LastUpdatedTimestamp": "2025-12-12T03:22:41.359000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HttpApiIntegrationHello",
+            "PhysicalResourceId": "w8vz8xg",
+            "ResourceType": "AWS::ApiGatewayV2::Integration",
+            "LastUpdatedTimestamp": "2025-12-12T03:23:09.352000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HttpApiRouteGet",
+            "PhysicalResourceId": "mxur8gq",
+            "ResourceType": "AWS::ApiGatewayV2::Route",
+            "LastUpdatedTimestamp": "2025-12-12T03:23:11.253000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "HttpApiStage",
+            "PhysicalResourceId": "$default",
+            "ResourceType": "AWS::ApiGatewayV2::Stage",
+            "LastUpdatedTimestamp": "2025-12-12T03:22:42.884000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "IamRoleLambdaExecution",
+            "PhysicalResourceId": "categoryService-dev-us-east-2-lambdaRole",
+            "ResourceType": "AWS::IAM::Role",
+            "LastUpdatedTimestamp": "2025-12-12T03:22:58.197000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

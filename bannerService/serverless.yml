@@ -1,0 +1,69 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: omnidatasystems
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: bannerService
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-2
+  environment:
+    BUCKET_NAME: banner-images-ads-zm8032-dev-190
+    REGION: us-east-2
+    DYNAMODB_TABLE: Banners
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource: arn:aws:s3:::banner-images-ads-zm8032-dev-190/*
+    - Effect: 'Allow'
+      Action:
+        -  dynamodb:PutItem
+        -  dynamodb:Scan
+      Resource: arn:aws:dynamodb:us-east-2:148761680273:table/Banners
+
+
+  # Uncomment to easily set up a custom domain. Read the docs for more details:
+  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
+  # domain: api.example.com
+
+resources:
+  Resources:
+    BannerImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: banner-images-ads-zm8032-dev-190
+    BannersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Banners
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          -  AttributeName: fileName
+             AttributeType: S
+        KeySchema:
+          -  AttributeName: fileName
+             KeyType: HASH
+
+functions:
+  uploadBanner:
+    handler: handlers/uploadBanner.getUploadUrl
+    events:
+      - httpApi:
+          path: /upload-banner
+          method: post
+  confirmUpload:
+    handler: handlers/confirmUpload.confirmUpload
+    events:
+      -  s3:
+           bucket: banner-images-ads-zm8032-dev-190
+           event: s3:ObjectCreated:Put
+           existing: true # says that the bucket already exists
+  getAllBanners:
+    handler: handlers/getAllBanners.getAllBanners
+    events:
+      - httpApi:
+          path: /get-all-banners
+          method: get
+
+

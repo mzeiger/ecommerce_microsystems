@@ -1,0 +1,70 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: omnidatasystems
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: login-register
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: authService
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-2
+  environment:
+    CLIENT_ID: ${ssm:/CLIENT_ID}
+    REGION: us-east-2
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+      - dynamodb:PutItem
+      Resource:
+        arn:aws:dynamodb:us-east-2:148761680273:table/Users
+        
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users #where users will be stored
+        BillingMode: PAY_PER_REQUEST # billed by usage
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S # "S" for "String". Could have typed String
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+          
+
+  # Uncomment to easily set up a custom domain. Read the docs for more details:
+  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
+  # domain: api.example.com
+
+functions:
+  signup:
+    handler: handlers/signUp.signUp
+    events:
+      -  httpApi:
+           path: /sign-up
+           method: post
+  confirmSignUp:
+    handler: handlers/confirmSignUp.confirmSignUp
+    events:
+      -  httpApi:
+           path: /confirm-sign-up
+           method: post
+  signIn:
+    handler: handlers/signIn.signIn
+    events:
+      -  httpApi:
+           path: /sign-in
+           method: post
+  signOut:
+    handler: handlers/signOut.signOut
+    events:
+      -  httpApi:
+           path: /sign-out
+           method: post
+
+  
+
+

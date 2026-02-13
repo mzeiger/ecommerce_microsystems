@@ -1,0 +1,103 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: omnidatasystems
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: productService
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  httpApi:
+    authorizers:
+      myCognitoAuth:
+        identitySource: $request.header.Authorization
+        issuerUrl: https://cognito-idp.us-east-2.amazonaws.com/us-east-2_pCfjQ9bOW
+        audience:
+          -  p88lil3293r6ciq0lgbm1e4d9
+
+  region: us-east-2
+  environment:
+    BUCKET_NAME: product-images-zm8032-dev-191
+    REGION: us-east-2
+    DYNAMO_TABLE: Products
+    SNS_TOPIC_ARN: arn:aws:sns:us-east-2:148761680273:ProductCleanupTopic
+
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:Scan"
+        - "dynamodb:DeleteItem"
+      Resource: arn:aws:dynamodb:us-east-2:148761680273:table/Products
+    - Effect: 'Allow'
+      Action:
+        - "s3:PutObject"
+      Resource:
+        - arn:aws:s3:::product-images-zm8032-dev-191/*
+    - Effect: "Allow"
+      Action:
+        -  sns:Publish
+      Resource: arn:aws:sns:us-east-2:148761680273:ProductCleanupTopic
+      
+
+  # Uncomment to easily set up a custom domain. Read the docs for more details:
+  # https://www.serverless.com/framework/docs/providers/aws/guide/domains
+  # domain: api.example.com
+resources:
+  Resources:
+    ProductImagesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: product-images-zm8032-dev-191
+    ProductTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Products
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+    ProductCleanupTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: ProductCleanupTopic
+    ProductCleanupSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: arn:aws:sns:us-east-2:148761680273:ProductCleanupTopic
+        Protocol: email
+        Endpoint: mark.zeiger@gmail.com                    
+
+functions:
+  getUploadUrl:
+    handler: handlers/getUploadUrl.getUploadUrl
+    events:
+      - httpApi:
+          path: /upload-product-url
+          method: post
+          authorizer:
+            name: myCognitoAuth
+            
+  updateProductImage:
+    handler: handlers/updateProductImage.updateProductImage
+    events:
+      - s3:
+          bucket: product-images-zm8032-dev-191
+          event: s3:ObjectCreated:Put
+          existing: true
+  cleanupProducts:
+    handler: handlers/cleanupProducts.cleanupProducts
+    events:
+      - schedule: rate(2 minutes)     
+
+  getAllProducts:
+    handler: handlers/getAllProducts.getAllProducts
+    events:
+      - httpApi:
+          path: /get-all-products-url
+          method: get
+
+  
